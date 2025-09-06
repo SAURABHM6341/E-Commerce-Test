@@ -1,9 +1,17 @@
 import axios from 'axios';
+import environmentManager from './environment.js';
+
+// Validate environment before creating API instance
+const envValidation = environmentManager.validateEnvironment();
+if (!envValidation.valid) {
+  console.error('Environment validation failed:', envValidation.message);
+}
 
 // Create axios instance with base configuration
 const API = axios.create({
-  baseURL: 'http://localhost:5000/api',
+  baseURL: environmentManager.getApiEndpoint('/api'),
   withCredentials: true,
+  timeout: environmentManager.getRequestTimeout(),
   headers: {
     'Content-Type': 'application/json',
   },
